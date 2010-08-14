@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="62">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="backend" projectFiles="true">
+        <logicalFolder name="f2" displayName="DX10" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="GL" projectFiles="true">
+          <itemPath>include/backend/GL/backend_gl.h</itemPath>
+          <itemPath>include/backend/GL/base_mesh_gl.h</itemPath>
+          <itemPath>include/backend/GL/base_technique_gl.h</itemPath>
+          <itemPath>include/backend/GL/box_gl.h</itemPath>
+          <itemPath>include/backend/GL/bump_technique_gl.h</itemPath>
+          <itemPath>include/backend/GL/camera_gl.h</itemPath>
+          <itemPath>include/backend/GL/light_gl.h</itemPath>
+          <itemPath>include/backend/GL/mesh_3ds_gl.h</itemPath>
+          <itemPath>include/backend/GL/mesh_md2_gl.h</itemPath>
+          <itemPath>include/backend/GL/mesh_sphere_gl.h</itemPath>
+          <itemPath>include/backend/GL/skybox_technique_gl.h</itemPath>
+          <itemPath>include/backend/GL/texture_gl.h</itemPath>
+          <itemPath>include/backend/GL/texture_tech_gl.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="interfaces" projectFiles="true">
+        <itemPath>include/interfaces/callbacks.h</itemPath>
+        <itemPath>include/interfaces/camera.h</itemPath>
+        <itemPath>include/interfaces/colossus.h</itemPath>
+        <itemPath>include/interfaces/colossus_base.h</itemPath>
+        <itemPath>include/interfaces/colossus_errors.h</itemPath>
+        <itemPath>include/interfaces/colossus_math.h</itemPath>
+        <itemPath>include/interfaces/lighting.h</itemPath>
+        <itemPath>include/interfaces/mesh.h</itemPath>
+        <itemPath>include/interfaces/orientation.h</itemPath>
+        <itemPath>include/interfaces/texture.h</itemPath>
+      </logicalFolder>
+      <itemPath>include/GLee.h</itemPath>
+      <itemPath>include/backend_factory.h</itemPath>
+      <itemPath>include/base_3d_app.h</itemPath>
+      <itemPath>include/base_camera.h</itemPath>
+      <itemPath>include/base_light.h</itemPath>
+      <itemPath>include/base_mesh.h</itemPath>
+      <itemPath>include/colossus_common.h</itemPath>
+      <itemPath>include/colossus_core.h</itemPath>
+      <itemPath>include/cubemap_tech.h</itemPath>
+      <itemPath>include/file.h</itemPath>
+      <itemPath>include/frame_manager.h</itemPath>
+      <itemPath>include/lighting_tech.h</itemPath>
+      <itemPath>include/md2_loader.h</itemPath>
+      <itemPath>include/physics_subsystem.h</itemPath>
+      <itemPath>include/shader.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="backend" projectFiles="true">
+        <logicalFolder name="f2" displayName="DX10" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="GL" projectFiles="true">
+          <itemPath>src/backend/GL/backend_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/base_mesh_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/base_technique_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/base_texture_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/box_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/bump_technique_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/callbacks_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/camera_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/cubemap_texture_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/light_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/mesh_3ds_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/mesh_md2_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/mesh_sphere_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/skybox_technique_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/texture2d_gl.cpp</itemPath>
+          <itemPath>src/backend/GL/texture_tech_gl.cpp</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <itemPath>src/GLee.c</itemPath>
+      <itemPath>src/backend_factory.cpp</itemPath>
+      <itemPath>src/base_3d_app.cpp</itemPath>
+      <itemPath>src/base_camera.cpp</itemPath>
+      <itemPath>src/base_light.cpp</itemPath>
+      <itemPath>src/base_mesh.cpp</itemPath>
+      <itemPath>src/colossus_core.cpp</itemPath>
+      <itemPath>src/colossus_math.cpp</itemPath>
+      <itemPath>src/cubemap_tech.cpp</itemPath>
+      <itemPath>src/file.cpp</itemPath>
+      <itemPath>src/frame_manager.cpp</itemPath>
+      <itemPath>src/lighting_tech.cpp</itemPath>
+      <itemPath>src/md2_loader.cpp</itemPath>
+      <itemPath>src/orientation.cpp</itemPath>
+      <itemPath>src/physics_subsystem.cpp</itemPath>
+      <itemPath>src/shader.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="3">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <architecture>1</architecture>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <architecture>1</architecture>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </ccTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+    </conf>
+    <conf name="Release" type="3">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>

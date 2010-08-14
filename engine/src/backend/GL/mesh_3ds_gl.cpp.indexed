@@ -1,0 +1,289 @@
+#include <lib3ds/file.h>
+#include <lib3ds/mesh.h>
+#include <lib3ds/types.h>
+#include <lib3ds/material.h>
+#include <string.h>
+
+#include "colossus_common.h"
+#include "backend/GL/mesh_3ds_gl.h"
+#include "interfaces/colossus_math.h"
+
+
+static unsigned int GetFaceCount(const Lib3dsFile* pFile)
+{
+    unsigned int FaceCount = 0;
+
+    Lib3dsMesh* pMesh = NULL;
+
+    // Loop through every mesh
+    for (pMesh = pFile->meshes ; pMesh != NULL ; pMesh = pMesh->next)
+    {
+            printf("Mesh %s, faces %d\n", pMesh->name, pMesh->faces);
+            // Add the number of faces this mesh has to the total faces
+            FaceCount += pMesh->faces;
+    }
+
+    return FaceCount;
+}
+
+static unsigned int GetVertexCount(const Lib3dsFile* pFile)
+{
+    unsigned int VertexCount = 0;
+
+    Lib3dsMesh* pMesh = NULL;
+
+    // Loop through every mesh
+    for (pMesh = pFile->meshes ; pMesh != NULL ; pMesh = pMesh->next)
+    {
+            printf("Mesh %s, vertices %d\n", pMesh->name, pMesh->points);
+            // Add the number of faces this mesh has to the total faces
+            VertexCount += pMesh->points;
+    }
+
+    return VertexCount;
+}
+static unsigned int GetIndexCount(const Lib3dsFile* pFile)
+{
+    unsigned int IndexCount = 0;
+
+    Lib3dsMesh* pMesh = NULL;
+
+    // Loop through every mesh
+    for (pMesh = pFile->meshes ; pMesh != NULL ; pMesh = pMesh->next)
+    {
+            printf("Mesh %s, indices %d\n", pMesh->name, pMesh->faces * 3);
+            // Add the number of faces this mesh has to the total faces
+            IndexCount += pMesh->faces * 3;
+    }
+
+    return IndexCount;
+}
+
+Mesh3DSGL::Mesh3DSGL(FrameManager* pFrameManager, const std::string& Name) : BaseMesh(pFrameManager, Name)
+{
+    m_indexCount  = 0;
+    m_vertexCount = 0;
+    m_meshCount   = 0;
+}
+
+
+Mesh3DSGL::~Mesh3DSGL()
+{
+}
+
+ColossusErrors::COLOSSUS_ERROR Mesh3DSGL::Load(const std::string& pFilename)
+{
+    Lib3dsFile* pFile = lib3ds_file_load(pFilename.c_str());
+
+    ColossusErrors::COLOSSUS_ERROR ret = ColossusErrors::NO_ERROR;
+
+    if (!pFile) {
+        fprintf(stderr, "Unable to load 3DS file: %s\n", pFilename.c_str());
+        ret = ColossusErrors::FILE_NOT_FOUND;
+    }
+    else {
+        const unsigned int FaceCount = GetFaceCount(pFile);
+        //m_vertexCount = FaceCount * 3;
+        //m_indexCount = m_vertexCount;
+        m_vertexCount = GetVertexCount(pFile) * 4;
+        m_indexCount = GetIndexCount(pFile);
+
+        printf("Vertex count %d\n", m_vertexCount);
+        printf("Index count %d\n", m_indexCount);
+
+        // Allocate memory for our pVertices and pNormals
+        GLint* pIndices     = new GLint[m_indexCount];
+        Vector3f* pVertices = new Vector3f[m_vertexCount];
+
+        //Vector3f* pNormals  = new Vector3f[m_vertexCount];
+        Lib3dsVector* pNormals  = new Lib3dsVector[m_vertexCount];
+      /*  for (unsigned int i = 0 ; i < m_vertexCount ; i++) {
+            pNormals[i] = Vector3f(0.0f, 0.0f, 0.0f);
+        }*/
+
+        Vector4f* pColors   = new Vector4f[m_vertexCount];
+        Vector2f* pTexels   = new Vector2f[m_vertexCount];
+        Vector3f* pTangents = new Vector3f[m_vertexCount];
+
+        Lib3dsMesh* pMesh = NULL;
+        unsigned int FinishedFaces = 0;
+        unsigned int VertexStart = 0;
+        MeshData Mesh;
+        unsigned int IndexOfIndex = 0;
+        unsigned int BaseVertex = 0;
+
+        // Loop through all the meshes
+        for (pMesh = pFile->meshes ; pMesh != NULL ; pMesh = pMesh->next) {
+            if (pMesh->faces > 0) {
+                lib3ds_mesh_calculate_normals(pMesh, &pNormals[FinishedFaces*3]);
+
+                Mesh.vertexStart = VertexStart;
+                Mesh.vertexCount = pMesh->faces * 3;
+
+                VertexStart += Mesh.vertexCount;
+
+                printf("Mesh '%s' start %d count %d\r\n", pMesh->name, Mesh.vertexStart, Mesh.vertexCount);
+
+                for (unsigned int i = 0 ; i < 4 ; i++) {
+                    for (unsigned int j = 0 ; j < 4 ; j++) {
+                        Mesh.transMatrix.m[j][i] = pMesh->matrix[i][j];
+                    }
+                    printf("%f %f %f %f\n", pMesh->matrix[i][0], pMesh->matrix[i][1], pMesh->matrix[i][2], pMesh->matrix[i][3]);
+                }
+
+                m_meshes.push_back(Mesh);
+                m_meshCount++;
+
+                const char* pMaterialName = pMesh->faceL[0].material;
+                printf("Material: %s\n", pMaterialName);
+                Lib3dsMaterial* pMaterial = lib3ds_file_material_by_name(pFile, pMaterialName);
+
+                if (pMaterial) {
+                    printf("	Ambient: %f, %f, %f, %f\n", pMaterial->ambient[0], pMaterial->ambient[1], pMaterial->ambient[2], pMaterial->ambient[3]);
+                    printf("	Diffuse: %f, %f, %f, %f\n", pMaterial->diffuse[0], pMaterial->diffuse[1], pMaterial->diffuse[2], pMaterial->diffuse[3]);
+                    printf("	Specular: %f, %f, %f, %f\n", pMaterial->specular[0], pMaterial->specular[1], pMaterial->specular[2], pMaterial->specular[3]);
+                    if (strlen(pMaterial->texture1_map.name) > 0) {
+                        printf("    Texture: %s\n", pMaterial->texture1_map.name);
+                    }
+                }
+
+                // for each triangle
+                for (unsigned int j = 0 ; j < pMesh->faces ; j++)
+                {
+                    const Lib3dsFace* pFace = &pMesh->faceL[j];
+
+                    for (unsigned int i = 0 ; i < 3 ; i++)
+                    {
+                        unsigned int Index =/* BaseVertex + */pFace->points[i];
+
+                       // printf("%d ", Index);
+
+                        assert(Index < m_vertexCount);
+
+                        pIndices[IndexOfIndex++] = Index;
+
+                        pVertices[Index].x = pMesh->pointL[Index].pos[0];
+                        pVertices[Index].y = pMesh->pointL[Index].pos[1];
+                        pVertices[Index].z = pMesh->pointL[Index].pos[2];
+
+                        //printf("%.02f,%.02f\n", pMesh->texelL[pFace->points[i]][0], pMesh->texelL[pFace->points[i]][1]);
+                        pTexels[Index].x = pMesh->texelL[Index][0];
+                        pTexels[Index].y = pMesh->texelL[Index][1];
+
+                        if (pMaterial) {
+                            for (unsigned int k = 0; k < 4 ; k++) {
+                                pColors[Index].v[k] = pMaterial->diffuse[k];
+                            }
+                        }
+                        else {
+                            for (unsigned int k = 0; k < 4 ; k++) {
+                                pColors[Index].v[k] = 0.0f;
+                            }
+                        }
+                    }                    
+                }
+
+                BaseVertex += (pMesh->faces * 3);
+                FinishedFaces += pMesh->faces;
+            }
+        }
+
+     //   printf("%d %d\n", IndexOfIndex, m_indexCount);
+        assert(IndexOfIndex == m_indexCount);
+
+        /*for (unsigned int i = 0 ; i < m_vertexCount ; i++) {
+                printf("%llx %llx %llx\n", (long long)pNormals[i][0],(long long)pNormals[i][1], (long long)pNormals[i][2]);
+                printf("%llx %llx %llx\n", (long long)pColors[i][0],(long long)pColors[i][1], (long long)pColors[i][2]);
+        }*/
+
+        printf("Mesh count: %d\n", m_meshCount);
+
+        //CalcNormals(pIndices, pVertices, pNormals);
+
+        glGenBuffers(1, &m_indexVBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexVBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLint) * m_indexCount, pIndices, GL_STATIC_DRAW);
+
+        glGenBuffers(1, &m_vertexVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * m_vertexCount, pVertices, GL_STATIC_DRAW);
+
+        glGenBuffers(1, &m_normalVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_normalVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Lib3dsVector) * m_vertexCount, pNormals, GL_STATIC_DRAW);
+
+        glGenBuffers(1, &m_colorVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector4f) * m_vertexCount, pColors, GL_STATIC_DRAW);
+
+        glGenBuffers(1, &m_texelVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_texelVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * m_vertexCount, pTexels, GL_STATIC_DRAW);
+
+        delete [] pIndices;
+        delete [] pVertices;
+        delete [] pNormals;
+        delete [] pColors;
+        delete [] pTexels;
+        delete [] pTangents;
+
+        lib3ds_file_free(pFile);
+    }
+
+    return ret;
+}
+
+
+void Mesh3DSGL::Render()
+{
+  
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexVBO);
+    glIndexPointer(GL_UNSIGNED_INT, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+    glVertexPointer(3, GL_FLOAT, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_normalVBO);
+    glNormalPointer(GL_FLOAT, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
+    glColorPointer(4, GL_FLOAT, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_texelVBO);
+    glTexCoordPointer(2, GL_FLOAT, 0, 0);
+
+    glDrawElements(GL_POLYGON, m_indexCount, GL_UNSIGNED_INT, 0);
+    /*for (MeshList::const_iterator it = m_meshes.begin() ; it != m_meshes.end() ; it++) {
+            //glPushMatrix();
+            //glTranslatef(it->transMatrix.m[3][0], it->transMatrix.m[3][1], it->transMatrix.m[3][2]);
+            //glMultMatrixf((const GLfloat*)&(it->transMatrix.m[0][0]));
+            glDrawArrays(GL_TRIANGLES, it->vertexStart, it->vertexCount);
+            //glPopMatrix();
+    }*/
+    //glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
+}
+
+
+void Mesh3DSGL::CalcNormals(const GLint* pIndices, const Vector3f* pVertices, Vector3f* pNormals)
+{
+    for (unsigned int i = 0 ; i < m_indexCount - 2 ; i++) {
+        const GLint Index0 = pIndices[i];
+        const GLint Index1 = pIndices[i + 1];
+        const GLint Index2 = pIndices[i + 2];
+        const Vector3f& P0 = pVertices[Index0];
+        const Vector3f& P1 = pVertices[Index1];
+        const Vector3f& P2 = pVertices[Index2];
+
+        const Vector3f Edge1 = P1 - P0;
+        const Vector3f Edge2 = P2 - P0;
+        const Vector3f Normal = CrossProduct(Edge1, Edge2);
+
+        pNormals[Index0] += Normal;
+        pNormals[Index1] += Normal;
+        pNormals[Index2] += Normal;
+
+        pNormals[Index0].Normalize();
+        pNormals[Index1].Normalize();
+        pNormals[Index2].Normalize();
+    }
+}
