@@ -34,51 +34,218 @@
 static const int MD2_MAGIC_NUM = 844121161;
 static const int MD2_STANDARD_VERSION = 8;
 
+Vector3f MD2Normals[162] = {
+{ -0.525731f,  0.000000f,  0.850651f },
+{ -0.442863f,  0.238856f,  0.864188f },
+{ -0.295242f,  0.000000f,  0.955423f },
+{ -0.309017f,  0.500000f,  0.809017f },
+{ -0.162460f,  0.262866f,  0.951056f },
+{  0.000000f,  0.000000f,  1.000000f },
+{  0.000000f,  0.850651f,  0.525731f },
+{ -0.147621f,  0.716567f,  0.681718f },
+{  0.147621f,  0.716567f,  0.681718f },
+{  0.000000f,  0.525731f,  0.850651f },
+{  0.309017f,  0.500000f,  0.809017f },
+{  0.525731f,  0.000000f,  0.850651f },
+{  0.295242f,  0.000000f,  0.955423f },
+{  0.442863f,  0.238856f,  0.864188f },
+{  0.162460f,  0.262866f,  0.951056f },
+{ -0.681718f,  0.147621f,  0.716567f },
+{ -0.809017f,  0.309017f,  0.500000f },
+{ -0.587785f,  0.425325f,  0.688191f },
+{ -0.850651f,  0.525731f,  0.000000f },
+{ -0.864188f,  0.442863f,  0.238856f },
+{ -0.716567f,  0.681718f,  0.147621f },
+{ -0.688191f,  0.587785f,  0.425325f },
+{ -0.500000f,  0.809017f,  0.309017f },
+{ -0.238856f,  0.864188f,  0.442863f },
+{ -0.425325f,  0.688191f,  0.587785f },
+{ -0.716567f,  0.681718f, -0.147621f },
+{ -0.500000f,  0.809017f, -0.309017f },
+{ -0.525731f,  0.850651f,  0.000000f },
+{  0.000000f,  0.850651f, -0.525731f },
+{ -0.238856f,  0.864188f, -0.442863f },
+{  0.000000f,  0.955423f, -0.295242f },
+{ -0.262866f,  0.951056f, -0.162460f },
+{  0.000000f,  1.000000f,  0.000000f },
+{  0.000000f,  0.955423f,  0.295242f },
+{ -0.262866f,  0.951056f,  0.162460f },
+{  0.238856f,  0.864188f,  0.442863f },
+{  0.262866f,  0.951056f,  0.162460f },
+{  0.500000f,  0.809017f,  0.309017f },
+{  0.238856f,  0.864188f, -0.442863f },
+{  0.262866f,  0.951056f, -0.162460f },
+{  0.500000f,  0.809017f, -0.309017f },
+{  0.850651f,  0.525731f,  0.000000f },
+{  0.716567f,  0.681718f,  0.147621f },
+{  0.716567f,  0.681718f, -0.147621f },
+{  0.525731f,  0.850651f,  0.000000f },
+{  0.425325f,  0.688191f,  0.587785f },
+{  0.864188f,  0.442863f,  0.238856f },
+{  0.688191f,  0.587785f,  0.425325f },
+{  0.809017f,  0.309017f,  0.500000f },
+{  0.681718f,  0.147621f,  0.716567f },
+{  0.587785f,  0.425325f,  0.688191f },
+{  0.955423f,  0.295242f,  0.000000f },
+{  1.000000f,  0.000000f,  0.000000f },
+{  0.951056f,  0.162460f,  0.262866f },
+{  0.850651f, -0.525731f,  0.000000f },
+{  0.955423f, -0.295242f,  0.000000f },
+{  0.864188f, -0.442863f,  0.238856f },
+{  0.951056f, -0.162460f,  0.262866f },
+{  0.809017f, -0.309017f,  0.500000f },
+{  0.681718f, -0.147621f,  0.716567f },
+{  0.850651f,  0.000000f,  0.525731f },
+{  0.864188f,  0.442863f, -0.238856f },
+{  0.809017f,  0.309017f, -0.500000f },
+{  0.951056f,  0.162460f, -0.262866f },
+{  0.525731f,  0.000000f, -0.850651f },
+{  0.681718f,  0.147621f, -0.716567f },
+{  0.681718f, -0.147621f, -0.716567f },
+{  0.850651f,  0.000000f, -0.525731f },
+{  0.809017f, -0.309017f, -0.500000f },
+{  0.864188f, -0.442863f, -0.238856f },
+{  0.951056f, -0.162460f, -0.262866f },
+{  0.147621f,  0.716567f, -0.681718f },
+{  0.309017f,  0.500000f, -0.809017f },
+{  0.425325f,  0.688191f, -0.587785f },
+{  0.442863f,  0.238856f, -0.864188f },
+{  0.587785f,  0.425325f, -0.688191f },
+{  0.688191f,  0.587785f, -0.425325f },
+{ -0.147621f,  0.716567f, -0.681718f },
+{ -0.309017f,  0.500000f, -0.809017f },
+{  0.000000f,  0.525731f, -0.850651f },
+{ -0.525731f,  0.000000f, -0.850651f },
+{ -0.442863f,  0.238856f, -0.864188f },
+{ -0.295242f,  0.000000f, -0.955423f },
+{ -0.162460f,  0.262866f, -0.951056f },
+{  0.000000f,  0.000000f, -1.000000f },
+{  0.295242f,  0.000000f, -0.955423f },
+{  0.162460f,  0.262866f, -0.951056f },
+{ -0.442863f, -0.238856f, -0.864188f },
+{ -0.309017f, -0.500000f, -0.809017f },
+{ -0.162460f, -0.262866f, -0.951056f },
+{  0.000000f, -0.850651f, -0.525731f },
+{ -0.147621f, -0.716567f, -0.681718f },
+{  0.147621f, -0.716567f, -0.681718f },
+{  0.000000f, -0.525731f, -0.850651f },
+{  0.309017f, -0.500000f, -0.809017f },
+{  0.442863f, -0.238856f, -0.864188f },
+{  0.162460f, -0.262866f, -0.951056f },
+{  0.238856f, -0.864188f, -0.442863f },
+{  0.500000f, -0.809017f, -0.309017f },
+{  0.425325f, -0.688191f, -0.587785f },
+{  0.716567f, -0.681718f, -0.147621f },
+{  0.688191f, -0.587785f, -0.425325f },
+{  0.587785f, -0.425325f, -0.688191f },
+{  0.000000f, -0.955423f, -0.295242f },
+{  0.000000f, -1.000000f,  0.000000f },
+{  0.262866f, -0.951056f, -0.162460f },
+{  0.000000f, -0.850651f,  0.525731f },
+{  0.000000f, -0.955423f,  0.295242f },
+{  0.238856f, -0.864188f,  0.442863f },
+{  0.262866f, -0.951056f,  0.162460f },
+{  0.500000f, -0.809017f,  0.309017f },
+{  0.716567f, -0.681718f,  0.147621f },
+{  0.525731f, -0.850651f,  0.000000f },
+{ -0.238856f, -0.864188f, -0.442863f },
+{ -0.500000f, -0.809017f, -0.309017f },
+{ -0.262866f, -0.951056f, -0.162460f },
+{ -0.850651f, -0.525731f,  0.000000f },
+{ -0.716567f, -0.681718f, -0.147621f },
+{ -0.716567f, -0.681718f,  0.147621f },
+{ -0.525731f, -0.850651f,  0.000000f },
+{ -0.500000f, -0.809017f,  0.309017f },
+{ -0.238856f, -0.864188f,  0.442863f },
+{ -0.262866f, -0.951056f,  0.162460f },
+{ -0.864188f, -0.442863f,  0.238856f },
+{ -0.809017f, -0.309017f,  0.500000f },
+{ -0.688191f, -0.587785f,  0.425325f },
+{ -0.681718f, -0.147621f,  0.716567f },
+{ -0.442863f, -0.238856f,  0.864188f },
+{ -0.587785f, -0.425325f,  0.688191f },
+{ -0.309017f, -0.500000f,  0.809017f },
+{ -0.147621f, -0.716567f,  0.681718f },
+{ -0.425325f, -0.688191f,  0.587785f },
+{ -0.162460f, -0.262866f,  0.951056f },
+{  0.442863f, -0.238856f,  0.864188f },
+{  0.162460f, -0.262866f,  0.951056f },
+{  0.309017f, -0.500000f,  0.809017f },
+{  0.147621f, -0.716567f,  0.681718f },
+{  0.000000f, -0.525731f,  0.850651f },
+{  0.425325f, -0.688191f,  0.587785f },
+{  0.587785f, -0.425325f,  0.688191f },
+{  0.688191f, -0.587785f,  0.425325f },
+{ -0.955423f,  0.295242f,  0.000000f },
+{ -0.951056f,  0.162460f,  0.262866f },
+{ -1.000000f,  0.000000f,  0.000000f },
+{ -0.850651f,  0.000000f,  0.525731f },
+{ -0.955423f, -0.295242f,  0.000000f },
+{ -0.951056f, -0.162460f,  0.262866f },
+{ -0.864188f,  0.442863f, -0.238856f },
+{ -0.951056f,  0.162460f, -0.262866f },
+{ -0.809017f,  0.309017f, -0.500000f },
+{ -0.864188f, -0.442863f, -0.238856f },
+{ -0.951056f, -0.162460f, -0.262866f },
+{ -0.809017f, -0.309017f, -0.500000f },
+{ -0.681718f,  0.147621f, -0.716567f },
+{ -0.681718f, -0.147621f, -0.716567f },
+{ -0.850651f,  0.000000f, -0.525731f },
+{ -0.688191f,  0.587785f, -0.425325f },
+{ -0.587785f,  0.425325f, -0.688191f },
+{ -0.425325f,  0.688191f, -0.587785f },
+{ -0.425325f, -0.688191f, -0.587785f },
+{ -0.587785f, -0.425325f, -0.688191f },
+{ -0.688191f, -0.587785f, -0.425325f }
+};
+
 //STATIC_ASSERT(sizeof(MD2Header) == 68);
 
 MD2Loader::Frame::Frame(unsigned int NumVertices)
 {
-    pPos = new Vector3f[NumVertices];
+    pPos     = new Vector3f[NumVertices];
+    pNormals = new Vector3f[NumVertices];
 }
 
 MD2Loader::Frame::~Frame()
 {
     delete [] pPos;
+    delete [] pNormals;
 }
 
 MD2Loader::MD2Loader(const std::string& fileName)
 {
     printf("Opening '%s'\n", fileName.c_str());
-    m_fileHandle = open(fileName.c_str(), O_RDONLY);
+    int FileHandle = open(fileName.c_str(), O_RDONLY);
 
-    if (m_fileHandle < 0)
+    if (FileHandle < 0)
         throw new std::exception;
 
-    int BytesRead = read(m_fileHandle, &m_header, sizeof(m_header));
+    int BytesRead = read(FileHandle, &m_header, sizeof(m_header));
     assert(BytesRead == 68);
 
     if (m_header.MagicNum != MD2_MAGIC_NUM) {
-        close(m_fileHandle);
+        close(FileHandle);
         throw new std::string("'%s' does not have MD2 magic number");
     }
 
     if (m_header.Version != 8) {
-        close(m_fileHandle);
+        close(FileHandle);
         throw new std::exception;
     }
 
-    LoadFrames();
-    LoadTriangles();
-    LoadTextureNames();
-    LoadTextureCoords();
+    LoadFrames(FileHandle);
+    LoadTriangles(FileHandle);
+    LoadTextureNames(FileHandle);
+    LoadTextureCoords(FileHandle);
 
-    close(m_fileHandle);
+    close(FileHandle);
 }
 
 
 MD2Loader::~MD2Loader()
 {
-    // allocate individual frames
+    // deallocate individual frames
     for (unsigned int i = 0 ; i < m_header.NumFrames ; i++) {
         delete m_ppFrames[i];
     }
@@ -90,7 +257,7 @@ MD2Loader::~MD2Loader()
     delete [] m_pTexCoords;
 }
 
-void MD2Loader::LoadFrames()
+void MD2Loader::LoadFrames(int FileHandle)
 {
     // allocate frame array
     m_ppFrames = new Frame*[m_header.NumFrames];
@@ -103,20 +270,21 @@ void MD2Loader::LoadFrames()
     // load the data of all the frames
     for (unsigned int i = 0 ; i < m_header.NumFrames ; i++) {
         // jump to start of the next frame data
-        lseek(m_fileHandle, m_header.FramesOffset + i * m_header.FrameSize, SEEK_SET);
+        lseek(FileHandle, m_header.FramesOffset + i * m_header.FrameSize, SEEK_SET);
 
         FrameHeader FrameHeader;
         Frame* pCurrentFrame = m_ppFrames[i];
-        int BytesRead = read(m_fileHandle, &FrameHeader, sizeof(FrameHeader));
+        int BytesRead = read(FileHandle, &FrameHeader, sizeof(FrameHeader));
         assert(BytesRead == sizeof(FrameHeader));
 
         memcpy(&(pCurrentFrame->Name), FrameHeader.Name, sizeof(FrameHeader.Name));
         
         printf("Loading frame '%s'\n", FrameHeader.Name);
+
         for (unsigned int j = 0 ; j < m_header.NumVertices ; j++) {
-            char Pos[3];
+            char Pos[4];
             
-            BytesRead = read(m_fileHandle, Pos, sizeof(Pos));
+            BytesRead = read(FileHandle, Pos, sizeof(Pos));
             assert(BytesRead == sizeof(Pos));
 
             pCurrentFrame->pPos[j].x = (float)Pos[0] * FrameHeader.Scale[0] + FrameHeader.Translation[0];
@@ -127,17 +295,19 @@ void MD2Loader::LoadFrames()
                                                     pCurrentFrame->pPos[j].x,
                                                     pCurrentFrame->pPos[j].y,
                                                     pCurrentFrame->pPos[j].z);
+
+            pCurrentFrame->pNormals[j] = MD2Normals[Pos[3]];
         }
     }    
 }
 
 
-void MD2Loader::LoadTriangles()
+void MD2Loader::LoadTriangles(int FileHandle)
 {
     m_pTriangles = new Triangle[m_header.NumTris];
     
     // jump to the start of the triangle data
-    lseek(m_fileHandle, m_header.TrisOffset, SEEK_SET);
+    lseek(FileHandle, m_header.TrisOffset, SEEK_SET);
 
     struct Data
     {
@@ -148,7 +318,7 @@ void MD2Loader::LoadTriangles()
     Data t;
 
     for (unsigned int i = 0 ; i < m_header.NumTris ; i++) {
-        int BytesRead = read(m_fileHandle, &t, sizeof(t));
+        int BytesRead = read(FileHandle, &t, sizeof(t));
         assert(BytesRead == sizeof(t));
 
         m_pTriangles[i].VertIndices[0] = t.VertIndices[0];
@@ -159,7 +329,7 @@ void MD2Loader::LoadTriangles()
         m_pTriangles[i].TexIndices[1] = t.TexIndices[1];
         m_pTriangles[i].TexIndices[2] = t.TexIndices[2];
 
-        printf("Triangle %d: vertices %d %d %d tex %d %d %d\n", i,
+        printf("Triangle %d: vertices %d %d %d, tex %d %d %d\n", i,
             m_pTriangles[i].VertIndices[0],
             m_pTriangles[i].VertIndices[1],
             m_pTriangles[i].VertIndices[2],
@@ -169,15 +339,15 @@ void MD2Loader::LoadTriangles()
     }
 }
 
-void MD2Loader::LoadTextureNames()
+void MD2Loader::LoadTextureNames(int FileHandle)
 {
-    lseek(m_fileHandle, m_header.SkinOffset, SEEK_SET);
+    lseek(FileHandle, m_header.SkinOffset, SEEK_SET);
 
     for (unsigned int i = 0 ; i < m_header.NumSkins ; i++) {
         char Name[64];
 
         ZeroMem(Name);
-        int BytesRead = read(m_fileHandle, Name, sizeof(Name));
+        int BytesRead = read(FileHandle, Name, sizeof(Name));
         assert(BytesRead == sizeof(Name));
         printf("'%s'\n", Name);
 
@@ -186,11 +356,11 @@ void MD2Loader::LoadTextureNames()
 }
 
 
-void MD2Loader::LoadTextureCoords()
+void MD2Loader::LoadTextureCoords(int FileHandle)
 {
-    m_pTexCoords = new TexCoord[m_header.NumTexCoords];
+    m_pTexCoords = new Vector2f[m_header.NumTexCoords];
             
-    lseek(m_fileHandle, m_header.TexCoordsOffset, SEEK_SET);
+    lseek(FileHandle, m_header.TexCoordsOffset, SEEK_SET);
 
     struct Data
     {
@@ -201,11 +371,11 @@ void MD2Loader::LoadTextureCoords()
     Data t;
 
     for (unsigned int i = 0 ; i < m_header.NumTexCoords ; i++) {
-        int BytesRead = read(m_fileHandle, &t, sizeof(t));
+        int BytesRead = read(FileHandle, &t, sizeof(t));
         assert(BytesRead == sizeof(t));
-        m_pTexCoords[i].u = (float)t.u / (float)m_header.SkinWidth;
-        m_pTexCoords[i].v = (float)t.v / (float)m_header.SkinHeight;
-        printf("Tex coords: %d,%d  %.02f,%.02f\n", t.u, t.v, m_pTexCoords[i].u, m_pTexCoords[i].v);
+        m_pTexCoords[i].x = (float)t.u / (float)m_header.SkinWidth;
+        m_pTexCoords[i].y = (float)t.v / (float)m_header.SkinHeight;
+        printf("Tex coords: %d,%d  %.02f,%.02f\n", t.u, t.v, m_pTexCoords[i].x, m_pTexCoords[i].y);
     }
 }
 

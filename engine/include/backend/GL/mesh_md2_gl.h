@@ -28,6 +28,7 @@
 #include "interfaces/colossus_errors.h"
 #include "interfaces/colossus_math.h"
 #include "base_mesh_gl.h"
+#include "texture_gl.h"
 
 class MeshMD2GL : public BaseMeshGL
 {
@@ -42,12 +43,8 @@ public:
 
 private:
 
-    GLuint m_vertexVBO;
-    GLuint m_normalVBO;
-    GLuint m_colorVBO;
-    GLuint m_texelVBO;
-    GLuint m_tangentVBO;
-    GLuint m_bitangentVBO;
+    Texture2DGL m_texture;
+    GLuint m_meshList;
 };
 
 

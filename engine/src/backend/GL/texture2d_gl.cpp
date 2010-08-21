@@ -43,6 +43,7 @@ ColossusErrors::COLOSSUS_ERROR Texture2DGL::Load2D(const std::string& FileName)
     if (m_texName == 0) {
         printf("Unable to load '%s'\n", FileName.c_str());
         assert(0);
+        return ColossusErrors::FILE_NOT_FOUND;
     }
     glBindTexture(GL_TEXTURE_2D, m_texName);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -50,6 +51,8 @@ ColossusErrors::COLOSSUS_ERROR Texture2DGL::Load2D(const std::string& FileName)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+    return ColossusErrors::NO_ERROR;
 }
 
 ColossusErrors::COLOSSUS_ERROR Texture2DGL::LoadCubeMap(const std::string& FileNameTop,

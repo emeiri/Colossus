@@ -29,20 +29,72 @@
 class MD2Loader
 {
 public:
+    struct Triangle
+    {
+        unsigned int VertIndices[3];
+        unsigned int TexIndices[3];
+    };
+
     MD2Loader(const std::string& fileName);
 
     ~MD2Loader();
 
-    unsigned int GetVertexCount();
+    inline unsigned int GetVertexCount() const
+    {
+        return m_header.NumVertices;
+    }
 
-    const Vector3f* GetVertices();
+    inline unsigned int GetFrameCount() const
+    {
+        return m_header.NumFrames;
+    }
 
+    inline const Vector3f* GetVertex(unsigned int Frame, unsigned int Vertex) const
+    {
+        assert(Frame < m_header.NumFrames);
+        assert(Vertex < m_header.NumVertices);
+        return &(m_ppFrames[Frame]->pPos[Vertex]);
+    }
+
+    inline const Vector3f* GetNormal(unsigned int Frame, unsigned int Vertex) const
+    {
+        assert(Frame < m_header.NumFrames);
+        assert(Vertex < m_header.NumVertices);
+        return &(m_ppFrames[Frame]->pNormals[Vertex]);
+    }
+
+    inline const Vector2f* GetTexCoords() const
+    {
+        return m_pTexCoords;
+    }
+
+    inline const Vector2f* GetTexCoord(unsigned int TexIndex) const
+    {
+        assert(TexIndex < m_header.NumTexCoords);
+        return &(m_pTexCoords[TexIndex]);
+    }
+
+    inline const Triangle* GetTriangles() const
+    {
+        return m_pTriangles;
+    }
+
+    inline unsigned int GetTriangleCount() const
+    {
+        return m_header.NumTris;
+    }
+
+    inline std::string GetTextureFileName() const
+    {
+        return m_textureNames.front();
+    }
+    
 private:
 
-    void LoadFrames();
-    void LoadTriangles();
-    void LoadTextureNames();
-    void LoadTextureCoords();
+    void LoadFrames(int FileHandle);
+    void LoadTriangles(int FileHandle);
+    void LoadTextureNames(int FileHandle);
+    void LoadTextureCoords(int FileHandle);
 
     struct MD2Header
     {
@@ -75,31 +127,20 @@ private:
     struct Frame
     {
         char Name[16];
+
         Vector3f* pPos;
+        Vector3f* pNormals;
 
         Frame(unsigned int NumVertices);
 
         ~Frame();
     };
 
-    struct Triangle
-    {
-        unsigned int VertIndices[3];
-        unsigned int TexIndices[3];
-    };
-
-    struct TexCoord
-    {
-        float u;
-        float v;
-    };
-
     MD2Header m_header;
     Frame** m_ppFrames;
     Triangle* m_pTriangles;
-    TexCoord* m_pTexCoords;
+    Vector2f* m_pTexCoords;
     std::list<std::string> m_textureNames;
-    int m_fileHandle;
 };
 
 #endif	/* _MD2_LOADER_H */

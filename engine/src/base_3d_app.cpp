@@ -108,7 +108,7 @@ void Base3DApplication::SetupRenderState()
     glShadeModel(GL_SMOOTH);
     glFrontFace(GL_CW);
     glEnable(GL_DEPTH_TEST);
-   // glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
     glDepthFunc(GL_LEQUAL);
 }

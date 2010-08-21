@@ -31,6 +31,7 @@
 #include "backend/GL/camera_gl.h"
 #include "backend/GL/mesh_sphere_gl.h"
 #include "backend/GL/box_gl.h"
+#include "backend/GL/mesh_md2_gl.h"
 
 
 BackendFactory::BackendFactory()
@@ -193,19 +194,23 @@ BaseMesh* BackendFactory::CreateMesh(const std::string& MeshName, const std::str
         if (FileName.substr(FileName.length() - 4) == ".3ds")
         {
             pMesh = new Mesh3DSGL(m_pFrameManager, MeshName);
-            if (pMesh->Load(FileName) != ColossusErrors::NO_ERROR)
-            {
-                delete pMesh;
-                pMesh = NULL;
-            }
         }
-        else
+        else if (FileName.substr(FileName.length() - 4) == ".md2")
         {
+            pMesh = new MeshMD2GL(m_pFrameManager, MeshName);
+        }
+        else {
             assert(0);
         }
     }
     else {
         assert(0);
+    }
+
+    if (pMesh && pMesh->Load(FileName) != ColossusErrors::NO_ERROR)
+    {
+        delete pMesh;
+        pMesh = NULL;
     }
 
     return pMesh;
